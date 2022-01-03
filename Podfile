@@ -7,4 +7,9 @@ target 'messengerT' do
 
   # Pods for messengerT
 
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Database'
+
+
 end
