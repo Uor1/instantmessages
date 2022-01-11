@@ -7,8 +7,11 @@
 
 import UIKit
 import FirebaseAuth
+import Firebase
+import GoogleSignIn
 
 class LoginViewController: UIViewController {
+    
     
     private let scrollView : UIScrollView = {
         let scrollView = UIScrollView()
@@ -63,6 +66,16 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    private let googleSignInButton : GIDSignInButton = {
+        
+        let button = GIDSignInButton()
+        button.style = .wide
+        button.layer.cornerRadius = 12
+        
+        
+        return button
+    }()
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "paperplane.fill")?.withTintColor(.link)
@@ -85,6 +98,10 @@ class LoginViewController: UIViewController {
         loginButton.addTarget(self,
                               action: #selector(loginButtonTapped),
                               for: .touchUpInside)
+        
+        googleSignInButton.addTarget(self,
+                                     action: #selector(googleSignInButtonTapped),
+                                     for: .touchUpInside)
         emailField.delegate = self
         passwordField.delegate = self
         
@@ -95,6 +112,7 @@ class LoginViewController: UIViewController {
         scrollView.addSubview(emailField)
         scrollView.addSubview(passwordField)
         scrollView.addSubview(loginButton)
+        scrollView.addSubview(googleSignInButton)
 
     }
     
@@ -123,6 +141,127 @@ class LoginViewController: UIViewController {
                                  y: passwordField.bottom + 10,
                                  width: scrollView.width - 60,
                                  height: 52)
+        googleSignInButton.frame = CGRect(x: 30,
+                                 y: loginButton.bottom + 10,
+                                 width: scrollView.width - 60,
+                                 height: 52)
+    }
+    
+    @objc private func googleSignInButtonTapped(){
+        print("Boton de google apretado")
+        guard let clientID = FirebaseApp.app()?.options.clientID else{return}
+        
+        let config = GIDConfiguration(clientID: clientID)
+        
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
+            
+            if let error = error {
+                print("Error al iniciar sesión con google: \(error.localizedDescription)" )
+                return
+            }
+            
+            print("Se inició sesión con google: \(user)")
+            
+            guard let email = user?.profile?.email,
+                  let firstName = user?.profile?.givenName,
+                  let lastName = user?.profile?.familyName else{
+                      return
+                  }
+            
+            DatabaseManager.shared.userExists(with: email, completion: {exists in
+                if !exists{
+                    //Insert to database
+                    DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName,
+                                                                        lastName: lastName,
+                                                                        emailAdress: email))
+                }
+            })
+            
+            guard
+                let authentication = user?.authentication,
+                let idToken = authentication.idToken
+            else {
+                print("Error al recibir autenticación o token id de google")
+                return
+            }
+            
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
+            
+            FirebaseAuth.Auth.auth().signIn(with: credential, completion: {authResult, error in
+                guard authResult != nil, error == nil else{
+                    print("Error al iniciar sesión con credencial de google")
+                    return
+                }
+                print("Se inició sesión correctamente con credencial de google")
+                self.navigationController?.dismiss(animated: true, completion: nil)
+            })
+            //THIS IS TEST
+            
+//            Auth.auth().signIn(with: credential) { authResult, error in
+//                if let error = error {
+//                    let authError = error as NSError
+//                    if isMFAEnabled, authError.code == AuthErrorCode.secondFactorRequired.rawValue {
+//                        // The user is a multi-factor user. Second factor challenge is required.
+//                        let resolver = authError
+//                            .userInfo[AuthErrorUserInfoMultiFactorResolverKey] as! MultiFactorResolver
+//                        var displayNameString = ""
+//                        for tmpFactorInfo in resolver.hints {
+//                            displayNameString += tmpFactorInfo.displayName ?? ""
+//                            displayNameString += " "
+//                        }
+//                        self.showTextInputPrompt(
+//                            withMessage: "Select factor to sign in\n\(displayNameString)",
+//                            completionBlock: { userPressedOK, displayName in
+//                                var selectedHint: PhoneMultiFactorInfo?
+//                                for tmpFactorInfo in resolver.hints {
+//                                    if displayName == tmpFactorInfo.displayName {
+//                                        selectedHint = tmpFactorInfo as? PhoneMultiFactorInfo
+//                                    }
+//                                }
+//                                PhoneAuthProvider.provider()
+//                                    .verifyPhoneNumber(with: selectedHint!, uiDelegate: nil,
+//                                                       multiFactorSession: resolver
+//                                                        .session) { verificationID, error in
+//                                        if error != nil {
+//                                            print(
+//                                                "Multi factor start sign in failed. Error: \(error.debugDescription)"
+//                                            )
+//                                        } else {
+//                                            self.showTextInputPrompt(
+//                                                withMessage: "Verification code for \(selectedHint?.displayName ?? "")",
+//                                                completionBlock: { userPressedOK, verificationCode in
+//                                                    let credential: PhoneAuthCredential? = PhoneAuthProvider.provider()
+//                                                        .credential(withVerificationID: verificationID!,
+//                                                                    verificationCode: verificationCode!)
+//                                                    let assertion: MultiFactorAssertion? = PhoneMultiFactorGenerator
+//                                                        .assertion(with: credential!)
+//                                                    resolver.resolveSignIn(with: assertion!) { authResult, error in
+//                                                        if error != nil {
+//                                                            print(
+//                                                                "Multi factor finanlize sign in failed. Error: \(error.debugDescription)"
+//                                                            )
+//                                                        } else {
+//                                                            self.navigationController?.popViewController(animated: true)
+//                                                        }
+//                                                    }
+//                                                }
+//                                            )
+//                                        }
+//                                    }
+//                            }
+//                        )
+//                    } else {
+//                        self.showMessagePrompt(error.localizedDescription)
+//                        return
+//                    }
+//                    // ...
+//                    return
+//                }
+//                // User is signed in
+//                // ...
+        }
+        
+        //GIDSignIn.
     }
     
     @objc private func loginButtonTapped(){
@@ -140,7 +279,7 @@ class LoginViewController: UIViewController {
                 return
             }
             guard let result = authResult, error == nil else{
-                print("Error al registrar usuario con correo: \(email)")
+                print("Error al iniciar sesión usuario con correo: \(email)")
                 return
             }
             
@@ -181,3 +320,4 @@ extension LoginViewController : UITextFieldDelegate {
         return true
     }
 }
+

@@ -7,9 +7,12 @@ target 'messengerT' do
 
   # Pods for messengerT
 
+  # Firebase 
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
 
+  # Google Sign in
+  pod 'GoogleSignIn' 
 
 end

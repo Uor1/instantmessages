@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ssq-PQ-zHU">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Conversations View Controller-->
+        <!--Mensajes-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ConversationsViewController" customModule="messengerT" customModuleProvider="target" sceneMemberID="viewController">
@@ -18,13 +18,101 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Mensajes" id="8eV-vG-98a"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="20" y="82"/>
+            <point key="canvasLocation" x="-733" y="-498"/>
+        </scene>
+        <!--Perfil-->
+        <scene sceneID="TSj-X0-mXa">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ECg-bG-8bK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <navigationController id="LJQ-TO-7yd" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Perfil" image="person.fill" catalog="system" id="DHv-2q-pSu"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="Nom-ZM-SO6">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="cEU-tj-20f" kind="relationship" relationship="rootViewController" id="Pq8-35-XtZ"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="-1632" y="160"/>
+        </scene>
+        <!--Perfil-->
+        <scene sceneID="csb-1A-5XP">
+            <objects>
+                <viewController id="cEU-tj-20f" customClass="ProfileViewController" customModule="messengerT" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="4Cb-qn-WWl">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="6zG-Kg-gM0">
+                                <rect key="frame" x="0.0" y="140" width="414" height="673"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ZBu-T2-xPd"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="ZBu-T2-xPd" firstAttribute="bottom" secondItem="6zG-Kg-gM0" secondAttribute="bottom" id="46u-fg-34O"/>
+                            <constraint firstItem="6zG-Kg-gM0" firstAttribute="top" secondItem="ZBu-T2-xPd" secondAttribute="top" id="Omx-tZ-1t1"/>
+                            <constraint firstItem="6zG-Kg-gM0" firstAttribute="leading" secondItem="ZBu-T2-xPd" secondAttribute="leading" id="foO-m0-PvM"/>
+                            <constraint firstItem="ZBu-T2-xPd" firstAttribute="trailing" secondItem="6zG-Kg-gM0" secondAttribute="trailing" id="mtw-qf-B8P"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Perfil" id="7BH-Yq-chL"/>
+                    <connections>
+                        <outlet property="tableView" destination="6zG-Kg-gM0" id="aME-dk-S1X"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pzg-6R-nXw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-733" y="159"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="ZNr-VL-cm7">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="thj-ps-PgS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tabBarController id="Ssq-PQ-zHU" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="XhT-PB-33L">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="uDE-XQ-vQA" kind="relationship" relationship="viewControllers" id="9KV-Vs-vcs"/>
+                        <segue destination="LJQ-TO-7yd" kind="relationship" relationship="viewControllers" id="M3m-VK-Nhk"/>
+                    </connections>
+                </tabBarController>
+            </objects>
+            <point key="canvasLocation" x="-2600" y="57"/>
+        </scene>
+        <!--Mensajes-->
+        <scene sceneID="cW9-BC-dC7">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="uDE-XQ-vQA" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Mensajes" image="bubble.right.fill" catalog="system" id="9qY-9Y-uKe"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="ZXj-mP-Ujz">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="yMU-o5-SVc"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SKz-gy-20X" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1633" y="-498"/>
         </scene>
     </scenes>
     <resources>
+        <image name="bubble.right.fill" catalog="system" width="128" height="110"/>
+        <image name="person.fill" catalog="system" width="128" height="120"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

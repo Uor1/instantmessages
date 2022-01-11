@@ -453,6 +453,8 @@
 				DEVELOPMENT_TEAM = 87J3UTHV2G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = messengerT/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Por favor permite acceso a la camara para tomar una fotografía";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "La aplicación necesita acceso a la librería de fotos";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -483,6 +485,8 @@
 				DEVELOPMENT_TEAM = 87J3UTHV2G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = messengerT/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Por favor permite acceso a la camara para tomar una fotografía";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "La aplicación necesita acceso a la librería de fotos";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
