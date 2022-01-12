@@ -9,9 +9,11 @@ import UIKit
 import FirebaseAuth
 import Firebase
 import GoogleSignIn
+import JGProgressHUD
 
 class LoginViewController: UIViewController {
     
+    private let spinner = JGProgressHUD(style: .dark)
     
     private let scrollView : UIScrollView = {
         let scrollView = UIScrollView()
@@ -149,18 +151,19 @@ class LoginViewController: UIViewController {
     
     @objc private func googleSignInButtonTapped(){
         print("Boton de google apretado")
+        spinner.show(in: view)
         guard let clientID = FirebaseApp.app()?.options.clientID else{return}
         
         let config = GIDConfiguration(clientID: clientID)
         
         GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
-            
+            self.spinner.dismiss(animated: true)
             if let error = error {
                 print("Error al iniciar sesión con google: \(error.localizedDescription)" )
                 return
             }
             
-            print("Se inició sesión con google: \(user)")
+            print("Se inició sesión con google: \(user?.profile?.name ?? "USUARIO NO ENCONTRADO")")
             
             guard let email = user?.profile?.email,
                   let firstName = user?.profile?.givenName,
@@ -195,73 +198,7 @@ class LoginViewController: UIViewController {
                 print("Se inició sesión correctamente con credencial de google")
                 self.navigationController?.dismiss(animated: true, completion: nil)
             })
-            //THIS IS TEST
-            
-//            Auth.auth().signIn(with: credential) { authResult, error in
-//                if let error = error {
-//                    let authError = error as NSError
-//                    if isMFAEnabled, authError.code == AuthErrorCode.secondFactorRequired.rawValue {
-//                        // The user is a multi-factor user. Second factor challenge is required.
-//                        let resolver = authError
-//                            .userInfo[AuthErrorUserInfoMultiFactorResolverKey] as! MultiFactorResolver
-//                        var displayNameString = ""
-//                        for tmpFactorInfo in resolver.hints {
-//                            displayNameString += tmpFactorInfo.displayName ?? ""
-//                            displayNameString += " "
-//                        }
-//                        self.showTextInputPrompt(
-//                            withMessage: "Select factor to sign in\n\(displayNameString)",
-//                            completionBlock: { userPressedOK, displayName in
-//                                var selectedHint: PhoneMultiFactorInfo?
-//                                for tmpFactorInfo in resolver.hints {
-//                                    if displayName == tmpFactorInfo.displayName {
-//                                        selectedHint = tmpFactorInfo as? PhoneMultiFactorInfo
-//                                    }
-//                                }
-//                                PhoneAuthProvider.provider()
-//                                    .verifyPhoneNumber(with: selectedHint!, uiDelegate: nil,
-//                                                       multiFactorSession: resolver
-//                                                        .session) { verificationID, error in
-//                                        if error != nil {
-//                                            print(
-//                                                "Multi factor start sign in failed. Error: \(error.debugDescription)"
-//                                            )
-//                                        } else {
-//                                            self.showTextInputPrompt(
-//                                                withMessage: "Verification code for \(selectedHint?.displayName ?? "")",
-//                                                completionBlock: { userPressedOK, verificationCode in
-//                                                    let credential: PhoneAuthCredential? = PhoneAuthProvider.provider()
-//                                                        .credential(withVerificationID: verificationID!,
-//                                                                    verificationCode: verificationCode!)
-//                                                    let assertion: MultiFactorAssertion? = PhoneMultiFactorGenerator
-//                                                        .assertion(with: credential!)
-//                                                    resolver.resolveSignIn(with: assertion!) { authResult, error in
-//                                                        if error != nil {
-//                                                            print(
-//                                                                "Multi factor finanlize sign in failed. Error: \(error.debugDescription)"
-//                                                            )
-//                                                        } else {
-//                                                            self.navigationController?.popViewController(animated: true)
-//                                                        }
-//                                                    }
-//                                                }
-//                                            )
-//                                        }
-//                                    }
-//                            }
-//                        )
-//                    } else {
-//                        self.showMessagePrompt(error.localizedDescription)
-//                        return
-//                    }
-//                    // ...
-//                    return
-//                }
-//                // User is signed in
-//                // ...
         }
-        
-        //GIDSignIn.
     }
     
     @objc private func loginButtonTapped(){
@@ -274,9 +211,15 @@ class LoginViewController: UIViewController {
         }
         
         //Firebase Login
+        spinner.show(in: view)
+        
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] authResult,error in
             guard let strongSelf = self else{
                 return
+            }
+            
+            DispatchQueue.main.async {
+                strongSelf.spinner.dismiss(animated: true)
             }
             guard let result = authResult, error == nil else{
                 print("Error al iniciar sesión usuario con correo: \(email)")

@@ -8,22 +8,34 @@
 import UIKit
 
 class NewConversationViewController: UIViewController {
+    
+    private let searchBar : UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.placeholder = "Buscar "
+        //searchBar.backgroundColor = .systemBackground
+        return searchBar
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .systemBackground
+        
+        navigationController?.navigationBar.topItem?.titleView = searchBar
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
+                                                            target: self,
+                                                            action: #selector(dismissSelf))
 
-        // Do any additional setup after loading the view.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @objc private func dismissSelf(){
+        dismiss(animated: true)
     }
-    */
+    
+}
 
+extension NewConversationViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        //
+    }
 }
