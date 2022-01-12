@@ -6,8 +6,30 @@
 //
 
 import UIKit
+import JGProgressHUD
 
 class NewConversationViewController: UIViewController {
+    
+    private let spinner = JGProgressHUD(style: .dark)
+    
+    private let tableView : UITableView = {
+        let tableView = UITableView()
+        tableView.register(UITableViewCell.self,
+                           forCellReuseIdentifier: "cell")
+        tableView.isHidden = true
+        
+        return tableView
+        
+    }()
+    
+    private let noResultsLabel : UILabel = {
+        let label = UILabel()
+        label.isHidden = true
+        label.textColor = .gray
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 21, weight: .medium)
+        return label
+    }()
     
     private let searchBar : UISearchBar = {
         let searchBar = UISearchBar()
@@ -25,6 +47,8 @@ class NewConversationViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
                                                             target: self,
                                                             action: #selector(dismissSelf))
+        
+        searchBar.becomeFirstResponder()
 
     }
     
